@@ -204,13 +204,13 @@ c_I = torch.zeros(13, dtype=torch.float32) + 0.0015
 Beta = 0.24 * torch.ones(13, n + 1, dtype=torch.float32)
 dt = 1.0
 # step size (for gradient descent)
-delta = 40e-3
+delta = 20e-3
 deltaGamma = 0.000002
 deltaCI = 0.0000001
 deltaCS = 0.0000001
 
 
-numiter = 20000
+numiter = 40000
 Imat = torch.zeros(13, n + 1, dtype=torch.float32)
 print(F.mse_loss(Imat, Imat_data) / F.mse_loss(Imat_data * 0, Imat_data))
 
@@ -234,37 +234,37 @@ for i in range(numiter):
     # Compute gradients
     loss.backward()
 
-    if i % 40 == 0:
-        gradLossGamma = Gamma.grad
-        # update the parameters
-        with torch.no_grad():
-            Gamma -= deltaGamma * gradLossGamma
-        if i % 100 == 1:
-            print(i, loss.item(), torch.norm(gradLossGamma).item())
-    elif i%40 == 1:
-        gradLossCI = c_I.grad
-        with torch.no_grad():
-            c_I -= deltaCI * gradLossCI
-        if i%100 ==1:
-            print(i,loss.item(),torch.norm(gradLossCI).item())
-
-    elif i % 40 == 2:
-        gradLossCS = c_S.grad
-        with torch.no_grad():
-            c_S -= deltaCS * gradLossCS
-        if i % 100 == 1:
-            print(i, loss.item(), torch.norm(gradLossCS).item())
-
-    else:
-        gradLossBeta = Beta.grad
-        # update the parameters
-        with torch.no_grad():
-            Beta -= delta * gradLossBeta
-        if i % 100 == 1:
-            print(i, loss.item(), torch.norm(gradLossBeta).item())
+    # if i % 40 == 0:
+    #     gradLossGamma = Gamma.grad
+    #     # update the parameters
+    #     with torch.no_grad():
+    #         Gamma -= deltaGamma * gradLossGamma
+    #     if i % 100 == 1:
+    #         print(i, loss.item(), torch.norm(gradLossGamma).item())
+    # elif i%40 == 1:
+    #     gradLossCI = c_I.grad
+    #     with torch.no_grad():
+    #         c_I -= deltaCI * gradLossCI
+    #     if i%100 ==1:
+    #         print(i,loss.item(),torch.norm(gradLossCI).item())
+    #
+    # elif i % 40 == 2:
+    #     gradLossCS = c_S.grad
+    #     with torch.no_grad():
+    #         c_S -= deltaCS * gradLossCS
+    #     if i % 100 == 1:
+    #         print(i, loss.item(), torch.norm(gradLossCS).item())
+    #
+    # else:
+    gradLossBeta = Beta.grad
+    # update the parameters
+    with torch.no_grad():
+        Beta -= delta * gradLossBeta
+    if i % 100 == 1:
+        print(i, loss.item(), torch.norm(gradLossBeta).item())
 
     Beta = torch.relu(Beta)
-    Gamma = torch.relu(Gamma)
+    # Gamma = torch.relu(Gamma)
 
 prov_to_look = 1
 pp.plot(t, Imat.detach()[prov_to_look, :], t, Imat_data[prov_to_look, :])
