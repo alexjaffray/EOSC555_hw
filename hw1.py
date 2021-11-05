@@ -258,6 +258,12 @@ for i in range(numiter):
     gradLossBeta = Beta.grad
     # update the parameters
     with torch.no_grad():
+
+        ## Add Line search
+        # look for step sizes that minimizes the loss in a certain direction
+        # naively do this by calculating the loss for a range of deltas and choose the best delta, guaranteeing a decrease in the loss
+        # TODO!
+
         Beta -= delta * gradLossBeta
     if i % 100 == 1:
         print(i, loss.item(), torch.norm(gradLossBeta).item())
