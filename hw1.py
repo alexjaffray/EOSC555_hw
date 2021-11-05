@@ -254,7 +254,6 @@ for i in range(numiter):
     #         c_S -= deltaCS * gradLossCS
     #     if i % 100 == 1:
     #         print(i, loss.item(), torch.norm(gradLossCS).item())
-    #
     # else:
     gradLossBeta = Beta.grad
     # update the parameters
